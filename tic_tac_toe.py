@@ -131,12 +131,10 @@ def winCheck():
         if(XX in row) is False:
           O_WIN_GAME = True
           winType = "Horizontal"
-          horizontal = row
           break
         if(OO in row) is False:
           X_WIN_GAME = True
           winType = "Horizontal"
-          horizontal = row
           break
       #vertical 
       
@@ -217,6 +215,7 @@ def Computer(Player):
         vertical_count = vertical_count + 1
       if (nextCell.isdigit()):
         possibleCells.append(nextCell)
+        
     return [vertical_count,possibleCells,"||"]
   # -- check
   def Horizontal_Check():
