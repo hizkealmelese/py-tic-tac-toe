@@ -1,5 +1,12 @@
 import os
 
+import random
+
+from colorama import Fore, Back, Style, init
+
+# Initialize Colorama
+init(autoreset=True, wrap=True, convert=True)
+
 gameHistory = []
 
 #useful fuction, input correction
@@ -15,12 +22,9 @@ def errorcheck_input(input_str):
       break
   return x
 
-
 def main():
   #im sorry, i have to do this :(
   global XX, OO, X_WIN_GAME, O_WIN_GAME, size, xy, number, before10, turns, grid
-  
-  import random
 
 
   def gameSelection():
@@ -66,6 +70,34 @@ def main():
       grid.remove([])
       return(grid)
   grid = graphics()
+
+  def drawGrid():
+  #color cell if it is x or o
+    def coloredCell(cell):
+      if(cell is XX):
+        return Fore.WHITE + Back.BLUE + Style.BRIGHT + '  ><  '
+      if(cell is OO):
+        return Fore.WHITE + Back.RED + Style.BRIGHT + '  CƆ  '
+      else:
+        return str("  " + cell + "  ")
+    #run graphics loop
+    firstRow = True
+    for row in grid:
+        firstCell = True
+        if(firstRow==True):
+            print(" "*25+"  "+"—"*(len(str(row))-2)+" ")
+        for cell in row:
+          if((firstCell == True)):
+            print(" "*25, coloredCell(cell), end="")
+            firstCell = False
+            firstRow = False
+          else:
+            print(coloredCell(cell), end="")
+        print("")
+        if(grid.index(row)==(len(grid)+1)):
+            print(" "*25+"  "+"—"*(len(str(row))-2)+" ")
+            break
+        print(" "*25+" "+"—"*len(str(row)))
 
   #letting user pick celll
   def userPick(PlayerSymbol,PlayerType,ComputerCell):
@@ -125,7 +157,7 @@ def main():
           if (BTnextCell.isdigit()) is False:
             diagonalBT.append(BTnextCell)
           else: break
-            
+
       #checking the BL-TR list
       if (len(diagonalTB)==size) and ((XX in diagonalTB)is False):
         O_WIN_GAME = True
@@ -155,7 +187,7 @@ def main():
             X_WIN_GAME = True
             winType = "Horizontal"
         #vertical 
-        
+
         #vertical code is TERRIBLE, I KNOW 
         #try to make it into a function next time but does it really matter?
         #because uses the amount of lines calling said fuction for XX and OO anyway
@@ -190,7 +222,7 @@ def main():
     CenterCell = ((size*size)/2)+0.5
     #compute the coordinate from the last picked player cell number
     player_x,player_y = ((PlayerCell-1)%size),((PlayerCell-1)//size)
-    
+
     #create a function for -,|,\\,// line checks
     # \\ Check
     def TopLeft_BottomRight_Diagonal_Check():
@@ -225,7 +257,7 @@ def main():
           vertical_count = vertical_count + 1
         if (nextCell.isdigit()):
           possibleCells.append(nextCell)
-          
+
       return [vertical_count,possibleCells,"||"]
     # -- check
     def Horizontal_Check():
@@ -236,12 +268,12 @@ def main():
           possibleCells.append(nextCell)
       return [horizontal_count,possibleCells,"--"]
 
-    
+
     FullCheck = [TopLeft_BottomRight_Diagonal_Check(),TopRight_BottomLeft_Diagonal_Check(),Vertical_Check(),Horizontal_Check()]
 
     #most critical lines are put in front
     FullCheck.sort(reverse=True)
-      
+
     #THE LINE DELETION TOOL IS BAD, IT TAKES 2 LOOPS 
     #the idea is to check if the cell list is empty and delete any lines without avaliable cells, but it needs to run before and during computer pick. this is because it will not delete a line if there are >1 lines with no cells BUT it will go out of range if there only 1 line if i use range(len(fullcheck)) because it is one extra element 
 
@@ -255,26 +287,26 @@ def main():
       for i in FullCheck:
         if [] in i:
           FullCheck.remove(i)
-      
+
       #if there are no lines available, pick a random cell
       if([] in FullCheck[0]) and ([] in FullCheck[-1]):
         userPick(OO,"computer",random.choice(number))
         return 0
 
-      
+
       #find the critical number amount based on size
       if(size%2)==0: 
         CriticalNumber = int(size/2)
       if(size%2)!=0:
         CriticalNumber = int((size/2)+0.5)
-      
+
       #check the first line of fullcheck has achived the critical number 
       #if so,extract the possible cells in that line and pick a cell.
       if(int(FullCheck[0][0]) >= CriticalNumber):
         MostCritical = (FullCheck[0][1])[0]
         userPick(OO,"computer",MostCritical)
         return 0  
-        
+
       #if not,pick the least critical line and pick a cell
       else:
         LeastCritical = (FullCheck[-1][1])[0]
@@ -289,45 +321,39 @@ def main():
         ComputerPick()
     else:
       ComputerPick()
-    
+
     return Player, FullCheck
 
   #win screen
   def endGame():
     os.system('cls' if os.name == 'nt' else 'clear')
     print("|"*75)
-    print("\n")
-    for i in grid:
-      print(" "*25,i)
-      print("\n")
+    drawGrid()
     print("|"*75)
     print("\n")
     if(O_WIN_GAME) and (gameType==1):
-      x = str("COMPUTER WON, with a " + winType + "!")
-      print(" "*20,x)
-      gameHistory.append(x)
+      x = str("COMPUTER WON, with a " + winType + "! ")
+      print(" "*10,x)
+      gameHistory.append(x + "Game size: " + str(size) + "x" + str(size))
       return 0
     if(X_WIN_GAME):
-      x = str("PLAYER X WON, with a " + winType + "!")
-      print(" "*20,x)
-      gameHistory.append(x)
+      x = str("PLAYER X WON, with a " + winType + "! ") 
+      print(" "*10,x)
+      gameHistory.append(x + "Game size: " + str(size) + "x" + str(size))
       return 0
     if(O_WIN_GAME):
-      x = str("PLAYER O WON, with a " + winType + "!")
-      print(" "*20,x)
+      x = str("PLAYER O WON, with a " + winType + "! ")
+      print(" "*10,x)
       return 0
     if(len(number)==0) and (any([X_WIN_GAME,O_WIN_GAME]) is False):
-      x ="TIE GAME, no players won !"
-      gameHistory.append(x)
+      x ="TIE GAME, no players won! "
+      gameHistory.append(x + "Game size: " + str(size) + "x" + str(size))
       print(" "*20,x)
       return 0
     xxxx = input()
   #print beginning screen
   print("_"*75)
-  print("\n")
-  for i in grid:
-    print(" "*25,i)
-    print("\n")
+  drawGrid()
   print("_"*75)
 
   #sub game loop
@@ -345,19 +371,15 @@ def main():
     if any([X_WIN_GAME,O_WIN_GAME]) is False:
       if(gameType==2):
         os.system('cls' if os.name == 'nt' else 'clear')
-        for i in grid:
-          print(" "*25,i)
-          print("\n")
+        print("_"*75)
+        drawGrid()
         print("_"*75)
         userPick(OO,"",0)
         os.system('cls' if os.name == 'nt' else 'clear')
       if(gameType==1):
         Computer(user)
       print("_"*75)
-      print("\n")
-      for i in grid:
-        print(" "*25,i)
-        print("\n")
+      drawGrid()
       print("_"*75)
       winCheck()
     else:
@@ -376,11 +398,15 @@ while(True):
   if(process == 1):
     main()
   elif(process == 2):
-    count = 0
-    for i in gameHistory:
-      count = count +1
-      print(count,":", str(i))
+    count = list(range(1,len(gameHistory)+1))
+    for number,element in zip(count, gameHistory):
+      if(number==len(gameHistory)):
+        y = str("Last Played: " + element)
+        print("_"*len(y))
+        print(y)
+      else:
+        print(str(number)+":", element)
     x = input()
   elif(process == 3):
     break
-      
+
