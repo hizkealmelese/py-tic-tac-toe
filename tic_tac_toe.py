@@ -85,7 +85,7 @@ def main():
     for row in grid:
         firstCell = True
         if(firstRow==True):
-            print(" "*25+"  "+"—"*(len(str(row))-2)+" ")
+            print(" "*25+" "+"—"*(len(str(row))))
         for cell in row:
           if((firstCell == True)):
             print(" "*25, coloredCell(cell), end="")
@@ -328,7 +328,9 @@ def main():
   def endGame():
     os.system('cls' if os.name == 'nt' else 'clear')
     print("|"*75)
+    print("")
     drawGrid()
+    print("")
     print("|"*75)
     print("\n")
     if(O_WIN_GAME) and (gameType==1):
@@ -353,6 +355,7 @@ def main():
     xxxx = input()
   #print beginning screen
   print("_"*75)
+  print("")
   drawGrid()
   print("_"*75)
 
@@ -372,6 +375,7 @@ def main():
       if(gameType==2):
         os.system('cls' if os.name == 'nt' else 'clear')
         print("_"*75)
+        print("")
         drawGrid()
         print("_"*75)
         userPick(OO,"",0)
@@ -379,6 +383,7 @@ def main():
       if(gameType==1):
         Computer(user)
       print("_"*75)
+      print("")
       drawGrid()
       print("_"*75)
       winCheck()
