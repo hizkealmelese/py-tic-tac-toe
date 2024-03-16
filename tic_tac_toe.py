@@ -234,6 +234,8 @@ def main():
           possibleCells.append(nextCell)
         if (nextCell == XX):
           diagonal_count = diagonal_count + 1
+        if (nextCell == OO):
+          diagonal_count = 0
     #return the amount of XX in that specific line, and the remaining available cells on that line]
       return [diagonal_count,possibleCells,"\\"]
     # // Check
@@ -246,6 +248,8 @@ def main():
           possibleCells.append(nextCell)
         if (nextCell == XX):
           diagonal_count = diagonal_count + 1
+        if (nextCell == OO):
+          diagonal_count = 0
       return [diagonal_count,possibleCells,"//"]
     # || check
     def Vertical_Check():
@@ -257,11 +261,14 @@ def main():
           vertical_count = vertical_count + 1
         if (nextCell.isdigit()):
           possibleCells.append(nextCell)
-
+        if (nextCell == OO):
+          vertical_count = 0
       return [vertical_count,possibleCells,"||"]
     # -- check
     def Horizontal_Check():
       horizontal_count = (grid[player_y]).count(XX)
+      if((grid[player_y]).count(OO))>0:
+        horizontal_count = 0
       possibleCells = []
       for nextCell in grid[player_y]:
         if (nextCell.isdigit()):
@@ -414,3 +421,4 @@ while(True):
     x = input()
   elif(process == 3):
     break
+
