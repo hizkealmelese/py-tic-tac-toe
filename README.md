@@ -129,10 +129,17 @@ Finally it returns the player value and full checklist for debugging.
 
 
 
-
-
-
 The final function is called endGame(), This function is basically the end of the game, it clears out anything from the terminal first, draws the game board with drawGrid() function, and then checks either if x or o won and then displays the representative win text. And then adds that text to the gameHistory list first defined in the beginning of the program
+
+The sub-game loop is basically just first checking if there's any cells remaining, then checking if anybody won the game then proceeding to let the x player to make a move and then draws the grid, and then checks if there's any remaining cells again (If not ends the loop) then it precedes for the o player to make a move and then draws a grid again but cleared everything first. It does this until either x or o wins, or there's no more remaining cell to pick.
+
+End of main () function
+
+
+
+
+
+The main game loop is basically an infinite loop where it always clears out the terminal first, then ask the user what they want to do, either a new game which calls the main() function, or to look at the
 
 
 
